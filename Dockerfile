@@ -1,19 +1,21 @@
 FROM debian:jessie
 MAINTAINER Jonathan Parrilla
 
-# debian:jessie takes a scratch image (empty image)
-# and adds its root file system, then runs /bin/bash as a CMD.
+# debian:jessie takes a scratch image (empty image) and adds its root file system, then runs /bin/bash as a CMD.
 
 
-# ========== BUILDPACK-DEPS ==========
+# ========== INSTALL DEPENDENCIES ==========
 
+
+# Install CA-Certificates, Curl, Wget, etc.
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		ca-certificates \
 		curl \
 		wget \
 	&& rm -rf /var/lib/apt/lists/*
 
-# procps is very common in build systems, and is a reasonably small package
+
+# Install bzr, Git, Mercurial, OpenSSH-Client, Subversion, and Procps (Common in build systems)
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		bzr \
 		git \
@@ -23,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		\
 		procps \
 	&& rm -rf /var/lib/apt/lists/*
+
 
 # ========== OPENJDK-8-JDK ==========
 
@@ -69,6 +72,23 @@ RUN set -x \
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 
+# ========== APT-UTILS ==========
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+
+# ========== NODE and DOCKER ==========
+
+# -----Install Node-----
+RUN curl -sL https://deb.nodesource.com/setup_6.x
+RUN apt-get update && apt-get install -y \
+		nodejs \
+		build-essential
+
+# -----Install Docker-----
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+		apt-get install docker.io \
+		add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+
+
 # ========== JENKINS ==========
 
 # Common Stuff - From Jenkins Docker File
@@ -80,11 +100,11 @@ ENV JENKINS_SLAVE_AGENT_PORT 50000
 
 ARG user=jenkins
 ARG group=jenkins
-ARG uid=1000
-ARG gid=1000
+ARG uid=777
+ARG gid=777
 
 # Create Jenkins User
-# Jenkins is run with user `jenkins`, uid = 1000
+# Jenkins is run with user `jenkins`, uid = 777
 # If you bind mount a volume from the host or a data container, 
 # ensure you use the same uid
 RUN groupadd -g ${gid} ${group} \
@@ -123,8 +143,8 @@ ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-w
 
 # could use ADD but this one does not check Last-Modified header neither does it allow to control checksum 
 # see https://github.com/docker/docker/issues/8331
-RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
-  && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
+RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war #\
+  #&& echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
 
 ENV JENKINS_UC https://updates.jenkins.io
 RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
