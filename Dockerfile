@@ -82,4 +82,8 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && DEBIAN_FRO
 # ===== CROSS BROWSER TESTING TUNNELS =====
 RUN npm install -g -y cbt_tunnels
 
+# ===== AWS CLI TOOLS =====
+
+RUN apt-get install -y awscli
+
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
