@@ -1,4 +1,4 @@
-# Jenkins
+# Solarkhan Jenkins
 A custom Jenkins image.
 
 It is comprised of a Dockerfile of a few other files used to configure and properly setup the Jenkins Docker Container.
