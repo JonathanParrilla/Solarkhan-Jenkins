@@ -1,5 +1,5 @@
 # Jenkins
-A custom Jenkins image. I created it for SmartBear Software. It is used by several development teams for their Dev, Stage, Q/A, and Production environments.
+A custom Jenkins image.
 
 It is comprised of a Dockerfile of a few other files used to configure and properly setup the Jenkins Docker Container.
 
