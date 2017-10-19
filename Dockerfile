@@ -14,7 +14,7 @@ ENV JENKINS_VERSION="2.85"
 # ===== Dependencies AND Jenkins =====
 
 # ---------- Install Dependencies ----------
-RUN apt-get update && apt-get -t jessie-backports install -y --no-install-recommends \
+RUN apt-get update && apt-get -t -y --no-install-recommends \
     apt-transport-https \
     ca-certificates \
     ca-certificates-java \
