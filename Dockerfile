@@ -1,4 +1,4 @@
-FROM debian:jessie-backports
+FROM ubuntu:14.04
 
 MAINTAINER Jonathan Parrilla <jonathan.parrilla@smartbear.com>
 
