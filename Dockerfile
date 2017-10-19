@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM debian:jessie-backports
 
 MAINTAINER Jonathan Parrilla <jonathan.parrilla@smartbear.com>
 
@@ -6,7 +6,7 @@ MAINTAINER Jonathan Parrilla <jonathan.parrilla@smartbear.com>
 # Debian:Jessie-Backports makes it easy to install Java.
 
 # Set Debian Frontend to noninteractive (no prompts)
-#ENV DEBIAN_FRONTEND="noninteractive"
+ENV DEBIAN_FRONTEND="noninteractive"
 
 # Set the Jenkins Version
 ENV JENKINS_VERSION="2.85"
@@ -14,7 +14,7 @@ ENV JENKINS_VERSION="2.85"
 # ===== Dependencies AND Jenkins =====
 
 # ---------- Install Dependencies ----------
-RUN apt-get update && apt-get -t -y --no-install-recommends \
+RUN apt-get update && apt-get -t jessie-backports install -y --no-install-recommends \
     apt-transport-https \
     ca-certificates \
     ca-certificates-java \
@@ -77,7 +77,7 @@ EXPOSE 50000
 RUN apt-get install -y sudo-ldap
 
 # ===== NODEJS and NPM =====
-#RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
 
 # ===== CROSS BROWSER TESTING TUNNELS =====
 RUN npm install -g -y cbt_tunnels
